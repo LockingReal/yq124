@@ -116,7 +116,7 @@
 				ctx.clearRect(0, 0, WIDTH, HEIGHT);
 				for (let i = 0, x = 0; i < bufferLength; i++) {
 					barHeight = dataArray[i]*4;
-					let r = barHeight + 25 * (i / bufferLength);
+					let r = barHeight + 15 * (i / bufferLength);
 					let g = 240 * (i / bufferLength);
 					let b = 50;
 					ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
