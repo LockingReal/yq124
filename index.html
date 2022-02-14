@@ -13,12 +13,10 @@
 			background: #13091B;
 			height: 100%;
 		}
-
 		body {
-			background: url(./bg.jpg) no-repeat;
+			background: url("https://chixian.oss-cn-hangzhou.aliyuncs.com/yq/bg.jpg") no-repeat;
 			background-size: cover;
 		}
-
 		#canvas {
 			position: fixed;
 			left: 0;
@@ -26,34 +24,15 @@
 			width: 100%;
 			height: 100%;
 		}
-
 		audio {
 			visibility: hidden;
 		}
-
 		#play-btn {
-	/* 		position: absolute;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
-			color: #13091B;
-			background: #007A99;
-			display: block;
-			width: 150px;
-			height: 45px;
-			line-height: 45px;
-			font-size: 18px;
-			cursor: pointer;
-			border-radius: 4px;
-			letter-spacing: 0.1em;
-			z-index: 1;
-			text-align: center;
-			text-decoration: none; */
 		}
 		.wrapperCd{
 			width:500px;
 			height:500px;
-			background-image: url(cd.png);
+			background-image: url("https://chixian.oss-cn-hangzhou.aliyuncs.com/yq/cd.png");
 			background-repeat: no-repeat;
 			background-size: contain;
 			display: flex;
@@ -95,11 +74,11 @@
 			</div>
 			<div class="main-center">
 				<div class="wrapperCd" id="play-btn">
-					<img src="yq.jpg" style="width:76%;height:76%;border-radius:50%;" />
+					<img src="https://chixian.oss-cn-hangzhou.aliyuncs.com/yq/yq.jpg" style="width:76%;height:76%;border-radius:50%;" />
 				</div>
 			</div>
 			<canvas id="canvas"></canvas>
-			<audio id="audio" controls src="./voice.m4a" crossOrigin="anonymous"></audio>
+			<audio id="audio" controls src="https://chixian.oss-cn-hangzhou.aliyuncs.com/yq/voice.m4a" crossOrigin="anonymous"></audio>
 			<!-- <a href="javascript:;" id="play-btn">PLAY</a> -->
 		</div>
 	</body>
@@ -112,30 +91,24 @@
 			audio.play();
 			onLoadAudio();
 		};
-
 		function onLoadAudio() {
 			let context = new(window.AudioContext || window.webkitAudioContext)();
 			let analyser = context.createAnalyser();
 			analyser.fftSize = 512;
 			console.log(context);
 			let source = context.createMediaElementSource(audio);
-
 			source.connect(analyser);
 			analyser.connect(context.destination);
 			let bufferLength = analyser.frequencyBinCount;
 			let dataArray = new Uint8Array(bufferLength);
-
 			let canvas = document.getElementById("canvas");
 			canvas.width = window.innerWidth;
 			canvas.height = window.innerHeight;
-
 			let ctx = canvas.getContext("2d");
 			let WIDTH = canvas.width;
 			let HEIGHT = canvas.height;
-
 			let barWidth = WIDTH / bufferLength * 1.5;
 			let barHeight;
-
 			function renderFrame() {
 				requestAnimationFrame(renderFrame);
 				analyser.getByteFrequencyData(dataArray);
