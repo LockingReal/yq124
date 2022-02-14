@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<style>
+		html,
+		body {
+			margin: 0;
+			overflow: hidden;
+			font-family: sans-serif;
+			background: #13091B;
+			height: 100%;
+		}
+
+		body {
+			background: url(./bg.jpg) no-repeat;
+			background-size: cover;
+		}
+
+		#canvas {
+			position: fixed;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+		}
+
+		audio {
+			visibility: hidden;
+		}
+
+		#play-btn {
+	/* 		position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			color: #13091B;
+			background: #007A99;
+			display: block;
+			width: 150px;
+			height: 45px;
+			line-height: 45px;
+			font-size: 18px;
+			cursor: pointer;
+			border-radius: 4px;
+			letter-spacing: 0.1em;
+			z-index: 1;
+			text-align: center;
+			text-decoration: none; */
+		}
+		.wrapperCd{
+			width:500px;
+			height:500px;
+			background-image: url(cd.png);
+			background-repeat: no-repeat;
+			background-size: contain;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		.main-word{
+			position: fixed;
+			top: 18vh;
+			text-align: center;
+			width: 100%;
+			font-size: 30px;
+			color:rgb(160,84,68);
+		}
+		   .turn{
+		      animation:turn 3s linear infinite;      
+		    }
+		    @keyframes turn{
+		      0%{-webkit-transform:rotate(0deg);}
+		      25%{-webkit-transform:rotate(90deg);}
+		      50%{-webkit-transform:rotate(180deg);}
+		      75%{-webkit-transform:rotate(270deg);}
+		      100%{-webkit-transform:rotate(360deg);}
+		    }
+			.main-center{
+				width:100%;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				top:30vh;
+				position: fixed;
+				z-index:9999;
+			}
+	</style>
+	<body>
+		<div id="content">
+			<div class="main-word">
+				<h2>愿你此刻可会知,是我衷心的说声…</h2>
+			</div>
+			<div class="main-center">
+				<div class="wrapperCd" id="play-btn">
+					<img src="yq.jpg" style="width:76%;height:76%;border-radius:50%;" />
+				</div>
+			</div>
+			<canvas id="canvas"></canvas>
+			<audio id="audio" controls src="./voice.m4a" crossOrigin="anonymous"></audio>
+			<!-- <a href="javascript:;" id="play-btn">PLAY</a> -->
+		</div>
+	</body>
+	<script>
+		let btn = document.getElementById("play-btn");
+		let audio = document.getElementById("audio");
+		btn.onclick = function() {
+			btn.classList.add("turn");
+			// btn.style.display = "none";
+			audio.play();
+			onLoadAudio();
+		};
+
+		function onLoadAudio() {
+			let context = new(window.AudioContext || window.webkitAudioContext)();
+			let analyser = context.createAnalyser();
+			analyser.fftSize = 512;
+			console.log(context);
+			let source = context.createMediaElementSource(audio);
+
+			source.connect(analyser);
+			analyser.connect(context.destination);
+			let bufferLength = analyser.frequencyBinCount;
+			let dataArray = new Uint8Array(bufferLength);
+
+			let canvas = document.getElementById("canvas");
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+
+			let ctx = canvas.getContext("2d");
+			let WIDTH = canvas.width;
+			let HEIGHT = canvas.height;
+
+			let barWidth = WIDTH / bufferLength * 1.5;
+			let barHeight;
+
+			function renderFrame() {
+				requestAnimationFrame(renderFrame);
+				analyser.getByteFrequencyData(dataArray);
+				ctx.clearRect(0, 0, WIDTH, HEIGHT);
+				for (let i = 0, x = 0; i < bufferLength; i++) {
+					barHeight = dataArray[i]*4;
+					let r = barHeight + 25 * (i / bufferLength);
+					let g = 240 * (i / bufferLength);
+					let b = 50;
+					ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
+					ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
+					x += barWidth + 2;
+				}
+			}
+			renderFrame();
+		}
+	</script>
+</html>
